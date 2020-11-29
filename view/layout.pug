@@ -1,0 +1,77 @@
+html
+	head
+		title Socket Communication
+		script(src="/socket.io/socket.io.js")
+		style(type='text/css').
+			span{
+			display: inline-block;
+			padding: 5px;
+			margin:5px;
+			color:#f1f1f1;
+			}
+			.nf{
+				background: green
+			}
+			.f{
+			background:red;
+			}
+			p{
+			font-size:120%;
+			height: 200px;
+			width: 25%;
+			overflow-y: scroll;
+			}
+	body
+		h1= "Status"
+		div
+			| Phòng 1: 
+			span.room1.nf Bình thường
+
+		div
+			| Phòng 2: 
+			span.room2.nf Bình thường
+		h1= "Lịch sử"
+		p
+		script.
+			var stt = {
+				P1: false,
+				P2: false
+			};
+			room1 = document.querySelector('.room1')
+			room2 = document.querySelector('.room2')
+			his = document.getElementsByTagName('p')
+			var socket = io.connect();
+			socket.on('fire-detection', function(data) {
+				stt = {...stt, ...data}
+			});
+			setInterval(()=>{
+				if(stt.P2){
+			    	room2.classList.remove('nf')
+			    	room2.classList.add('f')
+			    	room2.innerHTML = 'Phát hiện cháy'
+			    }
+				else{
+					room2.classList.remove('f')
+			    	room2.classList.add('nf')
+			    	room2.innerHTML = 'Bình thường'
+				}
+			    if(stt.P1){
+			    	room1.classList.remove('nf')
+			    	room1.classList.add('f')
+			    	room1.innerHTML = 'Phát hiện cháy'
+			    }
+				else{
+					room1.classList.remove('f')
+			    	room1.classList.add('nf')
+			    	room1.innerHTML = 'Bình thường'
+				}
+				stt = {
+					P1: false,
+					P2: false
+				};
+				his[0].scrollTop = his[0].scrollHeight;
+			},500)
+
+			socket.on('history',(data)=>{
+				his[0].innerHTML = data
+			})
