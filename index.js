@@ -26,7 +26,7 @@ setInterval(function(){
 		database.ref("/").set({"Room1":"Safe","Room2":"Safe"})
 	}
 		
-},200)
+},100)
 io.on('connection', function (socket) {
 	console.log('client connected '+socket.id);
 	data = fs.readFileSync('db.json')
