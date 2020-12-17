@@ -1,6 +1,6 @@
 var express = require("express")
 var app = express()
-var port = 3000
+var port = process.env.PORT || 3000;
 var server = app.listen(port,()=>console.log('Server open port 3000'))
 var io = require('socket.io')(server);
 var fs = require('fs');
